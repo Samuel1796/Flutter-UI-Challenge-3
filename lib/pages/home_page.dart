@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../utils/book_slider.dart';
 
+// Import the Book model
+import '../models/books.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
 
@@ -121,7 +124,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        body: const SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
@@ -130,39 +133,36 @@ class HomePage extends StatelessWidget {
                   children: [
                     // Content for Tab 1
                     BookImageSlider(
-                      imagePaths: [
-                        "lib/assets/book1.jpg",
-                        "lib/assets/book2.jpeg",
-                        "lib/assets/book3.jpeg",
-                      ],
+                      imagePaths: Book.getBooks()
+                          .where((book) => book.tag == "New")
+                          .map((book) => book.imagePath)
+                          .toList(), // Extract image paths from Book objects with tag "New"
                     ),
                     // Content for Tab 2
                     BookImageSlider(
-                      imagePaths: [
-                        "lib/assets/book4.jpeg",
-                        "lib/assets/book5.jpeg",
-                        "lib/assets/book1.jpg",
-                      ],
+                      imagePaths: Book.getBooks()
+                          .where((book) => book.tag == "Trending")
+                          .map((book) => book.imagePath)
+                          .toList(), // Extract image paths from Book objects with tag "Trending"
                     ),
                     // Content for Tab 3
                     BookImageSlider(
-                      imagePaths: [
-                        "lib/assets/book6.jpeg",
-                        "lib/assets/book2.jpeg",
-                        "lib/assets/book4.jpeg",
-                      ],
+                      imagePaths: Book.getBooks()
+                          .where((book) => book.tag == "Best Seller")
+                          .map((book) => book.imagePath)
+                          .toList(), // Extract image paths from Book objects with tag "Best Seller"
                     ),
                   ],
                 ),
               ),
 
-              SizedBox(
-                height: 15,
+              const SizedBox(
+                height: 20,
               ),
 
               //Popular tag
 
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,6 +176,76 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
+
+              //BOOK TILES
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: Book.getBooks().take(4).map((book) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 25),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[200],
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Book Image with border radius
+                        Container(
+                          height: 120,
+                          width: 90,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              book.imagePath,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Book Title
+                              Text(
+                                book.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              // Book Author
+                              Text(
+                                'by ${book.author}',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              // Book Price
+                              Text(
+                                '\$${book.price.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              )
             ],
           ),
         ),
