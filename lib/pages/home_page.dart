@@ -4,6 +4,7 @@ import '../utils/book_slider.dart';
 
 // Import the Book model
 import '../models/books.dart';
+import '../utils/bottom_navbar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
@@ -13,6 +14,9 @@ class HomePage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        bottomNavigationBar: BottomNavBar(
+          onTabChange: (index) {},
+        ),
         appBar: AppBar(
           elevation: 0,
           toolbarHeight: 160,
